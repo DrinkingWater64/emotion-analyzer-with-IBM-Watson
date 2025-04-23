@@ -19,7 +19,7 @@ def emotion_detector(text_to_analyse):
             emotion_scores = result['emotionPredictions'][0].get('emotion')
             if emotion_scores:
                 dominant_emotion = max(emotion_scores, key=emotion_scores.get)
-        return dominant_emotion
+        return dominant_emotion, emotion_scores
 
     except requests.exceptions.HTTPError as e:
         print(e)
