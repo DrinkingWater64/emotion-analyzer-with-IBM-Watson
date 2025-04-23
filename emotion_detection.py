@@ -11,17 +11,22 @@ def emotion_detector(text_to_analyse):
     headers = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
     input_json = {"raw_document": {"text": text_to_analyse}}
     try:
-        response = requests.post(url, headers, input_json)
+        response = requests.post(url, headers=headers, json=input_json)
         response.raise_for_status()
         result = response.json()
-        return result['document']['emotion']['predictions'][0]['label']
+        if 'emotionPredictions' in result and result['emotionPredictions']:
+            result = result['emotionPredictions'][0].get('emotion')
+
+        return result
+
     except requests.exceptions.HTTPError as e:
         print(e)
         return None
+
     except requests.exceptions.RequestException as e:
         print(e)
         return None
+
     except KeyError as e:
         print(e)
         return None
-
