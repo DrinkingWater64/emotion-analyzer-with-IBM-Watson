@@ -14,10 +14,12 @@ def emotion_detector(text_to_analyse):
         response = requests.post(url, headers=headers, json=input_json)
         response.raise_for_status()
         result = response.json()
+        dominant_emotion = None
         if 'emotionPredictions' in result and result['emotionPredictions']:
-            result = result['emotionPredictions'][0].get('emotion')
-
-        return result
+            emotion_scores = result['emotionPredictions'][0].get('emotion')
+            if emotion_scores:
+                dominant_emotion = max(emotion_scores, key=emotion_scores.get)
+        return dominant_emotion
 
     except requests.exceptions.HTTPError as e:
         print(e)
