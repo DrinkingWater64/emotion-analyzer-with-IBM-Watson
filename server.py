@@ -41,10 +41,29 @@ def emotion_detection_route():
         }
         return jsonify(output_json)
 
-    except Exception as e:
-        error_message = f"Error processing text: {e}"
+    except ValueError as e:
+
+        error_message = f"Value error processing text: {e}"
+
         print(error_message)
-        return jsonify({"error": error_message}), 500
+
+        return jsonify({"error": error_message}), 400
+
+    except (ConnectionError, TimeoutError) as e:
+
+        error_message = f"Connection error: {e}"
+
+        print(error_message)
+
+        return jsonify({"error": "Service temporarily unavailable"}), 503
+
+    except Exception as e:  # Keep this as a fallback, but log it differently
+
+        error_message = f"Unexpected error: {e}"
+
+        print(f"CRITICAL ERROR: {error_message}")
+
+        return jsonify({"error": "An unexpected error occurred"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
