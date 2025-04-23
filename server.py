@@ -1,3 +1,5 @@
+"""Flask application for emotion detection."""
+
 from flask import Flask, render_template, request, jsonify
 from EmotionDetection import emotion_detector
 app = Flask(__name__)
