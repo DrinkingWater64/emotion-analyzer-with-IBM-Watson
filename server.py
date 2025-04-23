@@ -24,10 +24,9 @@ def emotion_detection_route():
         return jsonify({"error": "Invalid request method. Please use POST or GET."}), 400
 
     try:
-        emotion_data = emotion_detector(text_to_analyze)  # Call your function
+        emotion_data = emotion_detector(text_to_analyze)
         if emotion_data:
-            dominant_emotion, emotion_scores = emotion_data  # Unpack the tuple
-            # Format the output as requested JSON
+            dominant_emotion, emotion_scores = emotion_data
             output_json = {
                 "anger": emotion_scores.get('anger', 0.0),
                 "disgust": emotion_scores.get('disgust', 0.0),
@@ -41,10 +40,10 @@ def emotion_detection_route():
             return jsonify({"error": "No emotion detected. Please try again!"}), 400  # Return JSON error
 
     except Exception as e:
-        # Handle potential errors during emotion detection
+
         error_message = f"Error processing text: {e}"
-        print(error_message)  # Log the error for debugging
-        return jsonify({"error": error_message}), 500  # Return JSON error
+        print(error_message)
+        return jsonify({"error": error_message}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
