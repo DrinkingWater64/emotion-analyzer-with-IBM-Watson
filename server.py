@@ -10,6 +10,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/emotionDetector', methods=['POST', 'GET'])
+@app.route('/emotionDetector', methods=['POST', 'GET'])
 def emotion_detection_route():
     """
     Handles the emotion detection request.
@@ -24,23 +25,21 @@ def emotion_detection_route():
         return jsonify({"error": "Invalid request method. Please use POST or GET."}), 400
 
     try:
-        emotion_data = emotion_detector(text_to_analyze)
-        if emotion_data:
-            dominant_emotion, emotion_scores = emotion_data
-            output_json = {
-                "anger": emotion_scores.get('anger', 0.0),
-                "disgust": emotion_scores.get('disgust', 0.0),
-                "fear": emotion_scores.get('fear', 0.0),
-                "joy": emotion_scores.get('joy', 0.0),
-                "sadness": emotion_scores.get('sadness', 0.0),
-                "dominant_emotion": dominant_emotion
-            }
-            return jsonify(output_json)
-        else:
-            return jsonify({"error": "No emotion detected. Please try again!"}), 400  # Return JSON error
+        dominant_emotion, emotion_scores = emotion_detector(text_to_analyze)
+        if dominant_emotion is None:
+            return jsonify({"error": "Invalid text! Please try again!"}), 400
+
+        output_json = {
+            "anger": emotion_scores.get('anger', 0.0),
+            "disgust": emotion_scores.get('disgust', 0.0),
+            "fear": emotion_scores.get('fear', 0.0),
+            "joy": emotion_scores.get('joy', 0.0),
+            "sadness": emotion_scores.get('sadness', 0.0),
+            "dominant_emotion": dominant_emotion
+        }
+        return jsonify(output_json)
 
     except Exception as e:
-
         error_message = f"Error processing text: {e}"
         print(error_message)
         return jsonify({"error": error_message}), 500
